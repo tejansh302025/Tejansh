@@ -1,108 +1,35 @@
-let students = [
-  {
-    id: 1,
-    name: "Sumit",
-    age: 25,
-    course: "Node.js",
-    email: "sumit@gmail.com",
-  },
-];
+import Student from "../models/Student.js";
 
-export const addStudent = (req, res) => {
-  const { name, age, course, email } = req.body;
+const addStudent = async (req, res) => {
+  try {
+    const student = await Student.create(req.body);
+    res.status(201).json({
+      success: true,
+      message: "Student added successfully",
+      data: student
+    })
+  } catch (error) {
+    res.status(400).json({
+      message: false,
+      message: "Student added failed",
+    })
+  }
+};
 
-  if (!name || !age || !course || !email) {
-    return res.status(400).json({
+const getAllStudents = async (req, res) => {
+  try {
+    const students = await Student.find();
+
+    res.status(200).json({
+      success: true,
+      total: students.length,
+      data: students
+    });
+  } catch (error) {
+    res.status(400).json({
       success: false,
-      message: "All fields are required",
+      message: error.message
     });
   }
-
-  const newStudent = {
-    id: students.length + 1,
-    name,
-    age,
-    course,
-    email,
-  };
-
-  students.push(newStudent);
-
-  res.status(201).json({
-    success: true,
-    message: "Student added successfully",
-    data: newStudent,
-  });
 };
-
-export const getAllStudents = (req, res) => {
-  res.status(200).json({
-    success: true,
-    total: students.length,
-    data: students,
-  });
-};
-
-export const getSingleStudent = (req, res) => {
-  const id = Number(req.params.id);
-
-  const student = students.find((item) => item.id === id);
-
-  if (!student) {
-    return res.status(404).json({
-      success: false,
-      message: "Student not found",
-    });
-  }
-
-  res.status(200).json({
-    success: true,
-    data: student,
-  });
-};
-
-export const updateStudent = (req, res) => {
-  const id = Number(req.params.id);
-
-  const student = students.find((item) => item.id === id);
-
-  if (!student) {
-    return res.status(404).json({
-      success: false,
-      message: "Student not found",
-    });
-  }
-
-  const { name, age, course, email } = req.body;
-
-  student.name = name || student.name;
-  student.age = age || student.age;
-  student.course = course || student.course;
-  student.email = email || student.email;
-
-  res.status(200).json({
-    success: true,
-    message: "Student updated successfully",
-    data: student,
-  });
-};
-
-export const deleteStudent = (req, res) => {
-  const id = Number(req.params.id);
-
-  const student = students.find((item) => item.id === id);
-
-  if (!student) {
-    return res.status(404).json({
-      success: false,
-      message: "Student not found",
-    });
-  }
-
-  students = students.filter((item) => item.id !== id);
-
-  res.status(200).json({
-    success: true,
-    message: "Student deleted successfully",
-  });
-};
+export default { addStudent, getAllStudents };
