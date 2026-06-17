@@ -3,13 +3,13 @@ import mongoose from 'mongoose';
 const studentSchema = new mongoose.Schema({
     name: {
         type: String,
-        require: true,
+        required: true,
         trim: true,
         lowercase: true
     },
     age: {
         type: Number,
-        require: true,
+        required: true,
         trim: true,
         min: 5,
         max: 80,
@@ -17,13 +17,13 @@ const studentSchema = new mongoose.Schema({
     },
     course: {
         type: String,
-        require: true,
+        required: true,
         trim: true,
         lowercase: true
     },
     email: {
         type: String,
-        require: true,
+        required: true,
         unique: true,
         trim: true,
         lowercase: true
